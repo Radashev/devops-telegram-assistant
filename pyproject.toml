@@ -1,0 +1,13 @@
+[200~[tool.poetry]
+name = "devops-telegram-assistant"
+version = "0.1.0"
+description = "Telegram assistant bot with DevOps deployment"
+authors = ["Vasyl Radashev <vasiliyradashev24.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
