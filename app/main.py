@@ -1,10 +1,12 @@
 import asyncio
 import os
 
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
+load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
