@@ -31,7 +31,7 @@ jobs:
         run: poetry config virtualenvs.create false
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-ansi
+        run: poetry install --no-root --no-interaction --no-ansi
 
       - name: Check API entrypoint
         run: python -m py_compile app/main.py
