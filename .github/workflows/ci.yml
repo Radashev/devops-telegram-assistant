@@ -33,5 +33,8 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-ansi
 
-      - name: Check bot entrypoint imports
+      - name: Check API entrypoint
         run: python -m py_compile app/main.py
+
+      - name: Check bot entrypoint
+        run: python -m py_compile app/bot/main.py
