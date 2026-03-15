@@ -1,8 +1,7 @@
 services:
   api:
     build: .
-    container_name: assistant-api1
-    command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command:  poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
     env_file:
       - .env
     ports:
@@ -13,8 +12,7 @@ services:
 
   bot:
     build: .
-    container_name: assistant-bot1
-    command: poetry run python app/bot/main.py
+    command: python -m app.bot.main
     env_file:
       - .env
     depends_on:
@@ -24,7 +22,6 @@ services:
 
   postgres:
     image: postgres:17
-    container_name: assistant-postgres1
     env_file:
       - .env
     volumes:
