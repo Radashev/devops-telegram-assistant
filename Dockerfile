@@ -1,14 +1,22 @@
 FROM python:3.11-slim
 
+# Встановлюємо змімінну середовища, щоб бачити логи в реальному часі
+ENV PYTHONUNBUFFERED=1
+# Додаємо корінь проекту до шляху пошуку модулів
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 
+# Копіюємо конфіги Poetry
 COPY pyproject.toml poetry.lock* ./
 
-RUN pip install poetry
+# Встановлюємо poetry та залежності
+RUN pip install --no-cache-dir poetry \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-root --only main
 
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-root
-
+# Копіюємо весь проект
 COPY . .
 
-CMD ["python", "app/main.py"]
+# Запускаємо як модуль
+CMD ["python", "-m", "app.bot.main"]
