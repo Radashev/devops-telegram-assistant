@@ -21,3 +21,9 @@ class UserUseCase:
             last_name=last_name,
         )
         return await self.user_repository.get_or_create(payload)
+
+    async def get_users(self) -> list[User]:
+        return await self.user_repository.get_all()
+
+    async def get_user_by_id(self, user_id: int) -> User | None:
+        return await self.user_repository.get_by_id(user_id)

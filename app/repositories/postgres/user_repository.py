@@ -27,3 +27,13 @@ class UserRepository:
         if existing:
             return existing
         return await self.create(payload)
+
+    async def get_all(self) -> list[User]:
+        result = await self.session.execute(select(User).order_by(User.id))
+        return list(result.scalars().all())
+
+    async def get_by_id(self, user_id: int) -> User | None:
+        result = await self.session.execute(
+            select(User).where(User.id == user_id)
+        )
+        return result.scalar_one_or_none()
