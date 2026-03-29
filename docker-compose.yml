@@ -9,6 +9,8 @@ services:
     depends_on:
       - postgres
     restart: always
+    volumes:
+      - .:/app
 
   bot:
     build: .
@@ -19,6 +21,8 @@ services:
       - api
       - postgres
     restart: always
+    volumes:
+      - .:/app
 
   postgres:
     image: postgres:17
