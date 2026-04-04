@@ -1,20 +1,21 @@
-import asyncio
 import os
-
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
-
+import asyncio
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from app.bot.handlers.tasks import router as tasks_router
+
+load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN is not set")
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
+dp.include_router(tasks_router)
 
 
 @dp.message(CommandStart())

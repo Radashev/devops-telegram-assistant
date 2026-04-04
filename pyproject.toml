@@ -6,7 +6,7 @@ description = "Telegram assistant bot with DevOps deployment"
 authors = ["Vasyl Radashev <vasiliyradashev24@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.15"
 aiogram = "^3.4"
 python-dotenv = "^1.2.2"
 fastapi = "^0.115.0"
@@ -15,6 +15,7 @@ sqlalchemy = "^2.0.48"
 asyncpg = "^0.31.0"
 alembic = "^1.18.4"
 pydantic-settings = "^2.13.1"
+aiohttp = "^3.13.5"
 
 [build-system]
 requires = ["poetry-core"]
