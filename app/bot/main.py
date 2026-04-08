@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from app.bot.handlers.tasks import router as tasks_router
+from app.bot.handlers.calendar import router as calendar_router
 
 load_dotenv()
 
@@ -16,6 +17,7 @@ if not BOT_TOKEN:
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 dp.include_router(tasks_router)
+dp.include_router(calendar_router)
 
 
 @dp.message(CommandStart())

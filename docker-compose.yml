@@ -17,6 +17,8 @@ services:
     command: python -m app.bot.main
     env_file:
       - .env
+    environment:
+      BOT_API_BASE_URL: http://api:8000
     depends_on:
       - api
       - postgres
