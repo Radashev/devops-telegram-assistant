@@ -1,9 +1,10 @@
 import aiohttp
 from aiogram import Router, types
+from app.core.config import settings
 
 router = Router()
 
-API_URL = "http://api:8000/tasks/"
+API_URL = f"{settings.bot_api_base_url}/tasks/"
 
 
 def build_headers(message: types.Message) -> dict:
