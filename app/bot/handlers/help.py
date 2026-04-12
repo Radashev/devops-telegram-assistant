@@ -10,6 +10,8 @@ HELP_UA = """
 👋 <b>/start</b>
 Запуск бота
 
+<b>📋 Tasks</b>
+
 📋 <b>/list</b>
 Показати задачі
 
@@ -17,16 +19,31 @@ HELP_UA = """
 Додати задачу
 
 ✅ <b>/done номер</b>
-Позначити як виконану
+Позначити задачу як виконану
 
 🗑 <b>/delete номер</b>
 Видалити задачу
 
+<b>🔁 Monthly reminders</b>
+
+🔁 <b>/remind_monthly 9 текст</b>
+Створити щомісячне нагадування на 9 число
+
+🔁 <b>/remind_monthly last текст</b>
+Створити нагадування на останній день місяця
+
+📌 <b>/reminders</b>
+Показати всі щомісячні нагадування
+
+🗑 <b>/delete_reminder ID</b>
+Видалити нагадування за ID
+
+<b>📅 Google Calendar</b>
+
 📅 <b>/gcal YYYY-MM-DD HH:MM текст</b>
 Додати подію в Google Calendar
 
-
-🌐 English version: /help_en
+🌐 English version: <b>/help_en</b>
 """
 
 
@@ -35,6 +52,8 @@ HELP_EN = """
 
 👋 <b>/start</b>
 Start the bot
+
+<b>📋 Tasks</b>
 
 📋 <b>/list</b>
 Show your tasks
@@ -48,11 +67,26 @@ Mark task as done
 🗑 <b>/delete number</b>
 Delete a task
 
+<b>🔁 Monthly reminders</b>
+
+🔁 <b>/remind_monthly 9 text</b>
+Create a monthly reminder for the 9th day
+
+🔁 <b>/remind_monthly last text</b>
+Create a reminder for the last day of the month
+
+📌 <b>/reminders</b>
+Show all monthly reminders
+
+🗑 <b>/delete_reminder ID</b>
+Delete a reminder by ID
+
+<b>📅 Google Calendar</b>
+
 📅 <b>/gcal YYYY-MM-DD HH:MM text</b>
-Create Google Calendar event
+Create a Google Calendar event
 
-
-🌐 Українська: /help
+🌐 Українська: <b>/help</b>
 """
 
 

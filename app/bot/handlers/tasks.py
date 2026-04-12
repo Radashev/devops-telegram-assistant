@@ -1,5 +1,7 @@
 import aiohttp
 from aiogram import Router, types
+from aiogram.filters import Command
+
 from app.core.config import settings
 
 router = Router()
@@ -37,9 +39,13 @@ def resolve_task_by_number(tasks: list[dict], number_str: str) -> dict | None:
     return tasks[number - 1]
 
 
-@router.message(lambda m: m.text and m.text.startswith("/add"))
+@router.message(Command("add"))
 async def add_task(message: types.Message):
-    parts = message.text.split(" ", 1)
+    if not message.text:
+        await message.answer("Формат: /add task text")
+        return
+
+    parts = message.text.split(maxsplit=1)
 
     if len(parts) < 2:
         await message.answer("Формат: /add task text")
@@ -67,7 +73,7 @@ async def add_task(message: types.Message):
                 await message.answer(f"Error: {text}")
 
 
-@router.message(lambda m: m.text and m.text.startswith("/list"))
+@router.message(Command("list"))
 async def list_tasks(message: types.Message):
     tasks = await fetch_tasks(message)
 
@@ -88,13 +94,19 @@ async def list_tasks(message: types.Message):
     await message.answer(text)
 
 
-@router.message(lambda m: m.text and m.text.startswith("/done"))
+@router.message(Command("done"))
 async def done_task(message: types.Message):
-    parts = message.text.split()
+    if not message.text:
+        await message.answer("Формат: /done <number>")
+        return
+
+    parts = message.text.split(maxsplit=1)
 
     if len(parts) < 2:
         await message.answer("Формат: /done <number>")
         return
+
+    task_number = parts[1].strip()
 
     tasks = await fetch_tasks(message)
     if tasks is None:
@@ -104,7 +116,7 @@ async def done_task(message: types.Message):
         await message.answer("No tasks yet")
         return
 
-    selected_task = resolve_task_by_number(tasks, parts[1])
+    selected_task = resolve_task_by_number(tasks, task_number)
 
     if not selected_task:
         await message.answer("Task number not found")
@@ -125,13 +137,19 @@ async def done_task(message: types.Message):
                 await message.answer(f"Error: {text}")
 
 
-@router.message(lambda m: m.text and m.text.startswith("/delete"))
+@router.message(Command("delete"))
 async def delete_task(message: types.Message):
-    parts = message.text.split()
+    if not message.text:
+        await message.answer("Формат: /delete <number>")
+        return
+
+    parts = message.text.split(maxsplit=1)
 
     if len(parts) < 2:
         await message.answer("Формат: /delete <number>")
         return
+
+    task_number = parts[1].strip()
 
     tasks = await fetch_tasks(message)
     if tasks is None:
@@ -141,7 +159,7 @@ async def delete_task(message: types.Message):
         await message.answer("No tasks yet")
         return
 
-    selected_task = resolve_task_by_number(tasks, parts[1])
+    selected_task = resolve_task_by_number(tasks, task_number)
 
     if not selected_task:
         await message.answer("Task number not found")
