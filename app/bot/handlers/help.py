@@ -43,6 +43,9 @@ HELP_UA = """
 📅 <b>/gcal YYYY-MM-DD HH:MM текст</b>
 Додати подію в Google Calendar
 
+🧠 <b>/plan_tasks ціль</b>
+Згенерувати план задач за допомогою AI
+
 🌐 English version: <b>/help_en</b>
 """
 
@@ -85,6 +88,9 @@ Delete a reminder by ID
 
 📅 <b>/gcal YYYY-MM-DD HH:MM text</b>
 Create a Google Calendar event
+
+🧠 <b>/plan_tasks goal</b>
+Generate a task plan using AI
 
 🌐 Українська: <b>/help</b>
 """

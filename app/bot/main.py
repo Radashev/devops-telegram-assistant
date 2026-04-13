@@ -9,6 +9,7 @@ from app.bot.handlers.tasks import router as tasks_router
 from app.bot.handlers.calendar import router as calendar_router
 from app.bot.handlers.help import router as help_router
 from app.bot.handlers.reminders import router as reminders_router
+from app.bot.handlers.task_planner import router as task_planner_router
 
 load_dotenv()
 
@@ -23,6 +24,7 @@ dp.include_router(tasks_router)
 dp.include_router(calendar_router)
 dp.include_router(help_router)
 dp.include_router(reminders_router)
+dp.include_router(task_planner_router)
 
 
 @dp.message(CommandStart())
