@@ -6,6 +6,8 @@ class Settings(BaseSettings):
 
     bot_api_base_url: str = "http://localhost:8001"
 
+    gmail_modify_token_path: str = "app/credentials/token_gmail_modify.json"
+    gmail_token_path: str = "app/credentials/token_gmail.json"
     google_credentials_path: str = "app/credentials/credentials.json"
     google_token_path: str = "app/credentials/token.json"
     google_calendar_id: str = "primary"

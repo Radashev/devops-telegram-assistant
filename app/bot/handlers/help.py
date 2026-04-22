@@ -46,6 +46,15 @@ HELP_UA = """
 🧠 <b>/plan_tasks ціль</b>
 Згенерувати план задач за допомогою AI
 
+📩 <b>/triage_email from@example.com | Subject | Snippet</b>
+AI-аналіз одного email
+
+📩 <b>/triage_batch</b>
+AI-аналіз кількох email за раз
+
+📦 <b>/archive_preview</b>
+Показати email, які можна безпечно архівувати
+
 🌐 English version: <b>/help_en</b>
 """
 
@@ -91,6 +100,15 @@ Create a Google Calendar event
 
 🧠 <b>/plan_tasks goal</b>
 Generate a task plan using AI
+
+📩 <b>/triage_email from@example.com | Subject | Snippet</b>
+AI analysis of one email
+
+📩 <b>/triage_batch</b>
+AI analysis of multiple emails at once
+
+📦 <b>/archive_preview</b>
+Show emails that can be safely archived
 
 🌐 Українська: <b>/help</b>
 """
