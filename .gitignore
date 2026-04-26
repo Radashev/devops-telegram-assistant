@@ -10,4 +10,4 @@ __pycache__/
 dist/
 build/
 poetry.lock
-app/credentials/
+app/credentials/*.json

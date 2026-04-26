@@ -73,6 +73,32 @@ async def add_task(message: types.Message):
                 await message.answer(f"Error: {text}")
 
 
+def parse_task_numbers(raw_args: str) -> list[int]:
+    numbers: set[int] = set()
+
+    parts = raw_args.split()
+
+    for part in parts:
+        if "-" in part:
+            start_str, end_str = part.split("-", 1)
+
+            if not start_str.isdigit() or not end_str.isdigit():
+                continue
+
+            start = int(start_str)
+            end = int(end_str)
+
+            if start > end:
+                continue
+
+            numbers.update(range(start, end + 1))
+        else:
+            if part.isdigit():
+                numbers.add(int(part))
+
+    return sorted(numbers)
+
+
 @router.message(Command("list"))
 async def list_tasks(message: types.Message):
     tasks = await fetch_tasks(message)
@@ -140,16 +166,20 @@ async def done_task(message: types.Message):
 @router.message(Command("delete"))
 async def delete_task(message: types.Message):
     if not message.text:
-        await message.answer("Формат: /delete <number>")
+        await message.answer("Формат: /delete <number> або /delete 1 2 3 або /delete 1-5")
         return
 
     parts = message.text.split(maxsplit=1)
 
     if len(parts) < 2:
-        await message.answer("Формат: /delete <number>")
+        await message.answer("Формат: /delete <number> або /delete 1 2 3 або /delete 1-5")
         return
 
-    task_number = parts[1].strip()
+    task_numbers = parse_task_numbers(parts[1])
+
+    if not task_numbers:
+        await message.answer("Task number not found")
+        return
 
     tasks = await fetch_tasks(message)
     if tasks is None:
@@ -159,21 +189,35 @@ async def delete_task(message: types.Message):
         await message.answer("No tasks yet")
         return
 
-    selected_task = resolve_task_by_number(tasks, task_number)
+    selected_tasks = []
 
-    if not selected_task:
+    for number in task_numbers:
+        selected_task = resolve_task_by_number(tasks, str(number))
+        if selected_task:
+            selected_tasks.append(selected_task)
+
+    if not selected_tasks:
         await message.answer("Task number not found")
         return
 
-    real_task_id = selected_task["id"]
-
     headers = build_headers(message)
-    url = f"{API_URL}{real_task_id}"
+
+    deleted = 0
+    failed = 0
 
     async with aiohttp.ClientSession() as session:
-        async with session.delete(url, headers=headers) as resp:
-            if resp.status == 200:
-                await message.answer("Task deleted 🗑️")
-            else:
-                text = await resp.text()
-                await message.answer(f"Error: {text}")
+        for task in selected_tasks:
+            real_task_id = task["id"]
+            url = f"{API_URL}{real_task_id}"
+
+            async with session.delete(url, headers=headers) as resp:
+                if resp.status == 200:
+                    deleted += 1
+                else:
+                    failed += 1
+
+    await message.answer(
+        f"🗑 Видалено задач: {deleted}\n"
+        f"❌ Помилок: {failed}"
+    )
+
