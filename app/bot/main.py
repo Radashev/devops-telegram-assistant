@@ -14,6 +14,7 @@ from app.bot.handlers.email_triage import router as email_triage_router
 from app.bot.handlers.email_to_tasks import router as email_to_tasks_router
 from app.bot.handlers.email_fetch import router as email_fetch_router
 from app.bot.handlers.email_archive import router as email_archive_router
+from app.bot.schedulers.reminder_scheduler import run_reminder_scheduler
 
 
 load_dotenv()
@@ -42,6 +43,7 @@ async def start_handler(message: Message) -> None:
 
 
 async def main() -> None:
+    asyncio.create_task(run_reminder_scheduler(bot))
     await dp.start_polling(bot)
 
 

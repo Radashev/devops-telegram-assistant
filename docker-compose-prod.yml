@@ -1,0 +1,40 @@
+services:
+  api:
+    build: .
+    command: sh -c "python scripts/wait_for_db.py && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    env_file:
+      - .env.prod
+    ports:
+      - "8002:8000"
+    depends_on:
+      - postgres
+    restart: always
+    volumes:
+      - ./app/credentials:/app/app/credentials
+
+  bot:
+    build: .
+    command: python -m app.bot.main
+    env_file:
+      - .env.prod
+    environment:
+      BOT_API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+      - postgres
+    restart: always
+    volumes:
+      - ./app/credentials:/app/app/credentials
+
+  postgres:
+    image: postgres:17
+    ports:
+      - "5440:5432"
+    env_file:
+      - .env.prod
+    volumes:
+      - assistant_postgres_data_prod:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  assistant_postgres_data_prod:

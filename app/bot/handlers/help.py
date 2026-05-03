@@ -52,6 +52,9 @@ AI-аналіз одного email
 📩 <b>/triage_batch</b>
 AI-аналіз кількох email за раз
 
+📬 /check_emails
+Перевірити останні email з Gmail через AI
+
 📦 <b>/archive_preview</b>
 Показати email, які можна безпечно архівувати
 
@@ -106,6 +109,9 @@ AI analysis of one email
 
 📩 <b>/triage_batch</b>
 AI analysis of multiple emails at once
+
+📬 /check_emails
+Check recent Gmail emails using AI
 
 📦 <b>/archive_preview</b>
 Show emails that can be safely archived
