@@ -38,3 +38,9 @@ jobs:
 
       - name: Check bot entrypoint
         run: python -m py_compile app/bot/main.py
+
+      - name: Run tests
+        run: poetry run pytest -v
+
+      - name: Build Docker image
+        run: docker build -t devops-telegram-assistant .
