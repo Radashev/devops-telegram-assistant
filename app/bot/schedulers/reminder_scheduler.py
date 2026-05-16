@@ -14,6 +14,7 @@ TIMEZONE = ZoneInfo("Europe/Warsaw")
 
 
 async def run_reminder_scheduler(bot: Bot) -> None:
+    print("✅ Reminder scheduler started", flush=True)
     while True:
         try:
             now = datetime.now(TIMEZONE)
@@ -25,6 +26,8 @@ async def run_reminder_scheduler(bot: Bot) -> None:
                 reminder_service = ReminderService(reminder_repository)
 
                 due_reminders = await reminder_service.get_due_reminders(today)
+                print(f"⏰ Scheduler tick: now={now}, today={today}", flush=True)
+                print(f"📌 Due reminders found: {len(due_reminders)}", flush=True)
 
                 for reminder in due_reminders:
                     user = await user_repository.get_by_id(reminder.user_id)
@@ -42,7 +45,11 @@ async def run_reminder_scheduler(bot: Bot) -> None:
                         triggered_at=now,
                     )
 
-        except Exception as e:
-            print(f"Reminder scheduler error: {e}")
 
-        await asyncio.sleep(3600)  # раз на годину
+        except Exception:
+
+            import traceback
+
+            traceback.print_exc()
+
+        await asyncio.sleep(30)

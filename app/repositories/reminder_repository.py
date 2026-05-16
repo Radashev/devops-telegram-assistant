@@ -15,12 +15,16 @@ class ReminderRepository:
         title: str,
         day_of_month: int | None,
         is_last_day: bool,
+        hour: int,
+        minute: int,
     ) -> Reminder:
         reminder = Reminder(
             user_id=user_id,
             title=title,
             day_of_month=day_of_month,
             is_last_day=is_last_day,
+            hour=hour,
+            minute=minute,
             is_active=True,
         )
         self.session.add(reminder)

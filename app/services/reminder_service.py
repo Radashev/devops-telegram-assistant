@@ -64,6 +64,8 @@ class ReminderService:
         user_id: int,
         raw_day: str,
         title: str,
+        hour: int,
+        minute: int,
     ):
         if not title.strip():
             raise ValueError("Reminder title cannot be empty.")
@@ -75,6 +77,8 @@ class ReminderService:
             title=title.strip(),
             day_of_month=day_of_month,
             is_last_day=is_last_day,
+            hour=hour,
+            minute=minute,
         )
 
     async def get_user_reminders(self, user_id: int):
