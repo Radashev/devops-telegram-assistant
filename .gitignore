@@ -9,5 +9,4 @@ __pycache__/
 .mypy_cache/
 dist/
 build/
-poetry.lock
 app/credentials/*.json
