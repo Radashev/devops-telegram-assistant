@@ -1,22 +1,33 @@
 FROM python:3.11-slim
 
-# Встановлюємо змімінну середовища, щоб бачити логи в реальному часі
+# Real-time logs
 ENV PYTHONUNBUFFERED=1
-# Додаємо корінь проекту до шляху пошуку модулів
+
+# Disable .pyc files
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Project root
 ENV PYTHONPATH=/app
 
 WORKDIR /app
 
-# Копіюємо конфіги Poetry
-COPY pyproject.toml poetry.lock* ./
+# Copy dependency files
+COPY pyproject.toml poetry.lock ./
 
-# Встановлюємо poetry та залежності
-RUN pip install --no-cache-dir poetry \
+# Install Poetry and dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc python3-dev libpq-dev \
+    && pip install --no-cache-dir poetry \
     && poetry config virtualenvs.create false \
-    && poetry install --no-root --only main
+    && poetry install --no-root --only main \
+    && pip cache purge \
+    && apt-get purge -y --auto-remove gcc python3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Копіюємо весь проект
+
 COPY . .
 
-# Запускаємо як модуль
-CMD ["python", "-m", "app.bot.main"]
+EXPOSE 8000
+
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

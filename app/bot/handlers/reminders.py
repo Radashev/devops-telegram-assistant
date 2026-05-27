@@ -11,6 +11,25 @@ from app.services.reminder_service import ReminderService
 router = Router()
 
 
+def parse_reminder_time(raw_time: str) -> tuple[int, int]:
+    try:
+        hour_raw, minute_raw = raw_time.strip().split(":", maxsplit=1)
+
+        hour = int(hour_raw)
+        minute = int(minute_raw)
+
+    except ValueError:
+        raise ValueError("Time must be in HH:MM format.")
+
+    if hour < 0 or hour > 23:
+        raise ValueError("Hour must be between 0 and 23.")
+
+    if minute < 0 or minute > 59:
+        raise ValueError("Minute must be between 0 and 59.")
+
+    return hour, minute
+
+
 async def get_or_create_db_user_id(telegram_user, session) -> int:
     user_repo = UserRepository(session)
 
@@ -31,17 +50,18 @@ async def remind_monthly_handler(message: Message) -> None:
         await message.answer("❌ Порожня команда.")
         return
 
-    parts = message.text.strip().split(maxsplit=2)
+    parts = message.text.strip().split(maxsplit=3)
 
-    if len(parts) < 3:
+    if len(parts) < 4:
         await message.answer(
             "Формат:\n"
-            "/remind_monthly 9 Заплатити за житло\n"
-            "/remind_monthly last Передати показники лічильників"
+            "/remind_monthly 9 15:00 Заплатити за житло\n"
+            "/remind_monthly last 16:30 Передати показники лічильників"
         )
         return
 
-    _, raw_day, title = parts
+    _, raw_day, raw_time, title = parts
+    hour, minute = parse_reminder_time(raw_time)
 
     async with AsyncSessionLocal() as session:
         try:
@@ -54,6 +74,8 @@ async def remind_monthly_handler(message: Message) -> None:
                 user_id=user_id,
                 raw_day=raw_day,
                 title=title,
+                hour=hour,
+                minute=minute,
             )
 
             day_text = "last" if reminder.is_last_day else str(reminder.day_of_month)
@@ -62,6 +84,7 @@ async def remind_monthly_handler(message: Message) -> None:
                 f"✅ Нагадування створено\n"
                 f"ID: {reminder.id}\n"
                 f"Day: {day_text}\n"
+                f"Time: {reminder.hour:02d}:{reminder.minute:02d}\n"
                 f"Text: {reminder.title}"
             )
 

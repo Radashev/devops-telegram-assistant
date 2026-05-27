@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,12 +15,16 @@ class ReminderRepository:
         title: str,
         day_of_month: int | None,
         is_last_day: bool,
+        hour: int,
+        minute: int,
     ) -> Reminder:
         reminder = Reminder(
             user_id=user_id,
             title=title,
             day_of_month=day_of_month,
             is_last_day=is_last_day,
+            hour=hour,
+            minute=minute,
             is_active=True,
         )
         self.session.add(reminder)
@@ -60,3 +65,20 @@ class ReminderRepository:
         await self.session.delete(reminder)
         await self.session.commit()
         return True
+
+    async def get_active(self) -> list[Reminder]:
+        result = await self.session.execute(
+            select(Reminder)
+            .where(Reminder.is_active.is_(True))
+            .order_by(Reminder.id.asc())
+        )
+        return list(result.scalars().all())
+
+    async def mark_triggered(self, reminder_id: int, triggered_at: datetime) -> None:
+        reminder = await self.session.get(Reminder, reminder_id)
+
+        if reminder is None:
+            return
+
+        reminder.last_triggered_at = triggered_at
+        await self.session.commit()

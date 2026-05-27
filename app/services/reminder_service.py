@@ -1,3 +1,6 @@
+import calendar
+from datetime import date, datetime
+
 from app.repositories.reminder_repository import ReminderRepository
 
 
@@ -21,11 +24,48 @@ class ReminderService:
 
         return day, False
 
+    def is_due_today(self, reminder, today: date) -> bool:
+        if reminder.is_last_day:
+            last_day = calendar.monthrange(today.year, today.month)[1]
+            return today.day == last_day
+
+        return reminder.day_of_month == today.day
+
+    def was_triggered_today(self, reminder, today: date) -> bool:
+        if reminder.last_triggered_at is None:
+            return False
+
+        return reminder.last_triggered_at.date() == today
+
+    async def get_due_reminders(self, today: date):
+        reminders = await self.reminder_repository.get_active()
+
+        due = []
+
+        for reminder in reminders:
+            if not self.is_due_today(reminder, today):
+                continue
+
+            if self.was_triggered_today(reminder, today):
+                continue
+
+            due.append(reminder)
+
+        return due
+
+    async def mark_triggered(self, reminder_id: int, triggered_at: datetime) -> None:
+        await self.reminder_repository.mark_triggered(
+            reminder_id=reminder_id,
+            triggered_at=triggered_at,
+        )
+
     async def create_monthly_reminder(
         self,
         user_id: int,
         raw_day: str,
         title: str,
+        hour: int,
+        minute: int,
     ):
         if not title.strip():
             raise ValueError("Reminder title cannot be empty.")
@@ -37,6 +77,8 @@ class ReminderService:
             title=title.strip(),
             day_of_month=day_of_month,
             is_last_day=is_last_day,
+            hour=hour,
+            minute=minute,
         )
 
     async def get_user_reminders(self, user_id: int):
