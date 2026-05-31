@@ -1,180 +1,245 @@
 # 🚀 DevOps Telegram Assistant
 
-A production-oriented Telegram assistant built with **FastAPI, Aiogram, PostgreSQL, MongoDB, and Docker**.
+Production-oriented Telegram assistant platform built with **FastAPI, Aiogram, PostgreSQL, Docker, and GitHub Actions CI/CD**.
 
-This project demonstrates a **real-world backend + DevOps architecture**, evolving from a simple bot into a scalable, cloud-ready system.
+This project demonstrates a real-world backend + DevOps workflow including:
+
+* asynchronous backend architecture
+* Telegram bot integration
+* Dockerized services
+* database migrations
+* CI/CD automation
+* cloud deployment on Fly.io
+* production healthchecks
+* Git branching workflow
+* cost-optimized cloud infrastructure
 
 ---
 
-## 🧠 Architecture Overview
+# 🧠 Architecture Overview
 
-```
-Telegram → Aiogram Bot → Use Cases → Repositories → Database
-                          ↘ FastAPI API
+```text
+Telegram User
+        ↓
+   Aiogram Bot
+        ↓
+     FastAPI API
+        ↓
+ PostgreSQL Database
+
+GitHub Actions
+        ↓
+   Fly.io Deploy
 ```
 
 ---
 
-## ⚙️ Tech Stack
+# ⚙️ Tech Stack
 
-### Backend
+## Backend
 
 * Python 3.11
 * FastAPI
 * Aiogram 3
 * SQLAlchemy (async)
-* Alembic (migrations)
+* Alembic
+* Pydantic
 
-### Databases
+## Database
 
 * PostgreSQL
-* MongoDB
+* asyncpg
 
-### DevOps
+## DevOps & Infrastructure
 
-* Docker & Docker Compose
-* Poetry
-* Git (feature branching)
-
-### Planned
-
+* Docker
+* Docker Compose
+* GitHub Actions (CI)
+* GitHub Actions (CD)
 * Fly.io
+* Healthchecks
+* Cloud logging
+* Poetry
+
+## Planned Infrastructure
+
 * AWS (EC2 / ECS / S3 / RDS)
-* GitHub Actions (CI/CD)
 * Terraform
+* Monitoring (Prometheus / Grafana)
 
 ---
 
-## ✅ Current Status
+# ✅ Current Features
 
-### Implemented
+## Backend
 
-* Clean Git workflow (`main`, `develop`, `feature/*`)
-* Python 3.11.5 managed with Poetry
-* Dockerized application (multi-service)
-* FastAPI app with `/health` endpoint
-* Aiogram bot with basic commands (`/start`)
-* PostgreSQL (async SQLAlchemy)
-* MongoDB integration
-* User model with persistence
-* API endpoints:
+* Async FastAPI application
+* REST API endpoints
+* `/health` production endpoint
+* SQLAlchemy async database layer
+* Alembic migrations
+* Repository pattern
+* Service layer
+* Use case layer
 
-  * `GET /users`
-  * `GET /users/{id}`
+## Telegram Bot
+
+* Aiogram-based bot
+* Reminder scheduler
+* Task management
+* Email-related handlers
+* Calendar integration
+
+## DevOps
+
+* Dockerized multi-service architecture
+* Production-ready Docker setup
+* CI pipeline with GitHub Actions
+* CD pipeline with Fly.io deployment
+* Automatic production healthcheck
+* Cloud deployment with process separation (`api` + `bot`)
+* Cost-optimized deployment strategy
+* Feature branching Git workflow
 
 ---
 
-## 🗄 Database Migrations (Alembic)
+# 🗄 Database Migrations
 
-* Alembic configured for async SQLAlchemy
-* Initial migration created for `users` table
-* Schema evolution supported
+Alembic is configured for asynchronous SQLAlchemy migrations.
 
-### Commands
+## Create migration
 
 ```bash
-docker-compose exec api poetry run alembic revision --autogenerate -m "message"
-docker-compose exec api poetry run alembic upgrade head
+docker compose exec api poetry run alembic revision --autogenerate -m "message"
+```
+
+## Apply migrations
+
+```bash
+docker compose exec api poetry run alembic upgrade head
 ```
 
 ---
 
-## 🧱 Project Structure
+# 🧱 Project Structure
 
-```
+```text
 app/
-├── api/           # FastAPI routes
-├── bot/           # Telegram bot logic
-├── core/          # config, settings, security
-├── db/            # database connections
-├── models/        # ORM models
-├── repositories/  # data access layer
-├── schemas/       # Pydantic schemas
-├── usecases/      # business logic
+├── api/             # FastAPI routes
+├── bot/             # Telegram bot logic
+├── core/            # Configuration and settings
+├── db/              # Database connections
+├── models/          # SQLAlchemy models
+├── repositories/    # Data access layer
+├── schemas/         # Pydantic schemas
+├── services/        # Service layer
+├── usecases/        # Business logic
 ```
 
 ---
 
-## 🐳 Local Development
+# 🐳 Local Development
 
-Run project:
+## Run locally
 
 ```bash
-docker-compose up --build
+docker compose up --build -d
 ```
 
-Health check:
+## Check containers
 
 ```bash
-curl http://localhost:8000/health
+docker compose ps
+```
+
+## API healthcheck
+
+```bash
+curl http://localhost:8001/health
 ```
 
 ---
 
-## ⚙️ Environment Variables
+# 🚀 Production Deployment
+
+Deployment flow:
+
+```text
+feature/* → develop → main → GitHub Actions → Fly.io
+```
+
+Production includes:
+
+* automatic deployment after merge to `main`
+* production healthcheck validation
+* Dockerized cloud deployment
+* cloud logging
+* API and bot process separation
+
+## Production health endpoint
+
+```bash
+curl https://devops-telegram-assistant.fly.dev/health
+```
+
+---
+
+# ⚙️ Environment Variables
 
 Example `.env`:
 
 ```env
-DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/db
-MONGO_URL=mongodb://mongo:27017
 BOT_TOKEN=your_token
+
+DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/db
+
+APP_ENV=development
+LOG_LEVEL=INFO
 ```
 
 ---
 
-## 🚧 In Progress
+# 🧪 CI/CD Pipeline
 
-* Repository pattern (PostgreSQL)
-* Clean architecture refactoring
-* API ↔ bot integration
+## CI
 
----
+GitHub Actions automatically:
 
-## 📌 Next Steps
+* install dependencies
+* run tests
+* validate Python entrypoints
+* build Docker image
 
-* Task model with foreign key to users
-* Task API endpoints
-* Reminder system
-* Notes system
+## CD
 
----
+After merge into `main`:
 
-## 🎯 Roadmap
-
-### Phase 1 — Backend Foundation
-
-* PostgreSQL models
-* async SQLAlchemy
-* repository layer
-* use cases
-
-### Phase 2 — Production Readiness
-
-* environment separation (dev/prod)
-* logging & monitoring
-
-### Phase 3 — CI/CD
-
-* GitHub Actions pipelines
-* Docker build & push
-
-### Phase 4 — Cloud Deployment
-
-* Fly.io (MVP)
-* AWS (production)
-* domain + HTTPS
-
-### Phase 5 — Advanced DevOps
-
-* Terraform
-* monitoring (Prometheus/Grafana)
-* background jobs & queues
+* Fly.io deployment starts automatically
+* production machine updates
+* production healthcheck validates deployment
 
 ---
 
-## 💡 Author
+# 📌 Roadmap
+
+## Backend
+
+* advanced task management
+* notes system
+* user authentication
+* background jobs
+
+## DevOps
+
+* Terraform infrastructure
+* monitoring and metrics
+* centralized logging
+* AWS production deployment
+
+---
+
+# 💡 Author
 
 **Vasyl Radashev**
-DevOps / Backend Engineer (in progress 🚀)
 
+Backend / DevOps Engineer focused on production-ready systems, CI/CD automation, Dockerized infrastructure and cloud deployment.
