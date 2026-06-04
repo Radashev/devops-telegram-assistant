@@ -62,3 +62,12 @@ def test_reminder_was_triggered_today():
 
     assert service.was_triggered_today(reminder, date(2026, 5, 9)) is True
     assert service.was_triggered_today(reminder, date(2026, 5, 10)) is False
+
+
+def test_reminder_is_not_due_when_day_does_not_match():
+    service = ReminderService(FakeReminderRepository())
+
+    reminder = FakeReminder(day_of_month=15, is_last_day=False)
+
+    assert service.is_due_today(reminder, date(2026, 5, 14)) is False
+    assert service.is_due_today(reminder, date(2026, 5, 16)) is False
